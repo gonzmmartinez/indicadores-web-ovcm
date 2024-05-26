@@ -1,0 +1,212 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .select-container {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            align-items: flex-start; /* Asegura que los textos y selects estén alineados */
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .select-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centra el texto y el select dentro del contenedor */
+        }
+        p { 
+            padding:0px; 
+            margin:0px; 
+        }
+    </style>
+</head>
+
+<div style="text-align:center; max-width: 750px; display: block; margin-left: auto; margin-right: auto;">
+    <!-- Fuente Poppins -->
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    
+    <!-- Paquete Chart.js -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    
+    <!-- Titulo del gráfico -->
+    <div style="font-family: Poppins; text-align: left;">
+        <p>
+            <span style="font-size:20px">Denuncias por modalidad de violencia</span>
+            <br>
+            <span style="font-size:15px"><i>Por distrito, y año</i></span>
+        </p>
+    </div>
+
+    <!-- Canvas para el chart -->
+    <canvas id="myChart3"></canvas>
+
+    <!-- Titulo del gráfico -->
+    <div style="font-family: Poppins; text-align: right; font-size: 12px; color: gray">
+        <p>
+            <strong>NOTA</strong>: La fuente no registra de forma binaria el género de las personas.
+            <br>
+            <strong>FUENTE</strong>: Oficina de Violencia Familiar y de Género.
+        </p>
+    </div>
+
+    <!-- Listas desplegables -->
+    <div class="select-container" style="font-family: Poppins; font-size: 12px;">
+        <div class="select-group">
+            <div >
+                Distrito:
+            </div>
+            <select id="Distrito3" onchange="changeDistritos3()">
+                <option value="Centro">Centro</option>
+                <option value="Norte-Orán">Norte-Orán</option>
+                <option value="Norte-Tartagal">Norte-Tartagal</option>
+                <option value="Sur-Anta">Sur-Anta</option>
+                <option value="Sur-Metán">Sur-Metán</option>
+            </select>
+        </div>
+        <div class="select-group">
+            <div>
+                Año:
+            </div>
+            <select id="Year3" onchange="changeDistritos3()">
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script>
+        // Establecer fuente Poppins
+        Chart.defaults.font.family = "Poppins";
+        Chart.register(ChartDataLabels);
+
+        // Constante ctx
+        const ctx3 = document.getElementById('myChart3').getContext('2d');
+
+        // Datos
+        const rawData3 = [
+        {'Modalidad': 'Acoso callejero', 'Distrito': {2020: {'Centro': 18, 'Norte-Orán': 49, 'Norte-Tartagal': 9, 'Sur-Metán': 11}, 2021: {'Centro': 12, 'Norte-Orán': 14, 'Norte-Tartagal': 12, 'Sur-Metán': 3}, 2022: {'Centro': 10, 'Norte-Orán': 16, 'Norte-Tartagal': 4, 'Sur-Anta': 5}, 2023: {'Centro': 7, 'Norte-Orán': 0, 'Norte-Tartagal': 2, 'Sur-Anta': 0}}},
+        {'Modalidad': 'Domestica', 'Distrito': {2020: {'Centro': 8048, 'Norte-Orán': 1162, 'Norte-Tartagal': 1923, 'Sur-Metán': 665}, 2021: {'Centro': 9334, 'Norte-Orán': 1630, 'Norte-Tartagal': 2237, 'Sur-Metán': 854}, 2022: {'Centro': 8528, 'Norte-Orán': 1894, 'Norte-Tartagal': 2315, 'Sur-Anta': 382}, 2023: {'Centro': 4139, 'Norte-Orán': 828, 'Norte-Tartagal': 992, 'Sur-Anta': 136}}},
+        {'Modalidad': 'Institucional', 'Distrito': {2020: {'Centro': 5, 'Norte-Orán': 0, 'Norte-Tartagal': 2, 'Sur-Metán': 1}, 2021: {'Centro': 11, 'Norte-Orán': 1, 'Norte-Tartagal': 3, 'Sur-Metán': 3}, 2022: {'Centro': 14, 'Norte-Orán': 2, 'Norte-Tartagal': 2, 'Sur-Anta': 4}, 2023: {'Centro': 6, 'Norte-Orán': 0, 'Norte-Tartagal': 0, 'Sur-Anta': 0}}},
+        {'Modalidad': 'Laboral', 'Distrito': {2020: {'Centro': 26, 'Norte-Orán': 7, 'Norte-Tartagal': 2, 'Sur-Metán': 10}, 2021: {'Centro': 23, 'Norte-Orán': 7, 'Norte-Tartagal': 4, 'Sur-Metán': 11}, 2022: {'Centro': 34, 'Norte-Orán': 7, 'Norte-Tartagal': 7, 'Sur-Anta': 4}, 2023: {'Centro': 24, 'Norte-Orán': 0, 'Norte-Tartagal': 2, 'Sur-Anta': 1}}},
+        {'Modalidad': 'Mediatica', 'Distrito': {2020: {'Centro': 2, 'Norte-Orán': 19, 'Norte-Tartagal': 1, 'Sur-Metán': 1}, 2021: {'Centro': 5, 'Norte-Orán': 6, 'Norte-Tartagal': 2, 'Sur-Metán': 1}, 2022: {'Centro': 5, 'Norte-Orán': 1, 'Norte-Tartagal': 1, 'Sur-Anta': 1}, 2023: {'Centro': 0, 'Norte-Orán': 2, 'Norte-Tartagal': 1, 'Sur-Anta': 0}}},
+        {'Modalidad': 'Obstetrica', 'Distrito': {2020: {'Centro': 0, 'Norte-Orán': 1, 'Norte-Tartagal': 1, 'Sur-Metán': 1}, 2021: {'Centro': 2, 'Norte-Orán': 0, 'Norte-Tartagal': 0, 'Sur-Metán': 1}, 2022: {'Centro': 0, 'Norte-Orán': 0, 'Norte-Tartagal': 0, 'Sur-Anta': 0}, 2023: {'Centro': 1, 'Norte-Orán': 0, 'Norte-Tartagal': 0, 'Sur-Anta': 0}}},
+        {'Modalidad': 'Otras', 'Distrito': {2020: {'Centro': 0, 'Norte-Orán': 0, 'Norte-Tartagal': 0, 'Sur-Metán': 0}, 2021: {'Centro': 13, 'Norte-Orán': 20, 'Norte-Tartagal': 31, 'Sur-Metán': 18}, 2022: {'Centro': 24, 'Norte-Orán': 26, 'Norte-Tartagal': 29, 'Sur-Anta': 5}, 2023: {'Centro': 14, 'Norte-Orán': 10, 'Norte-Tartagal': 27, 'Sur-Anta': 2}}},
+        {'Modalidad': 'Politica', 'Distrito': {2020: {'Centro': 0, 'Norte-Orán': 0, 'Norte-Tartagal': 0, 'Sur-Metán': 0}, 2021: {'Centro': 0, 'Norte-Orán': 1, 'Norte-Tartagal': 0, 'Sur-Metán': 1}, 2022: {'Centro': 3, 'Norte-Orán': 0, 'Norte-Tartagal': 2, 'Sur-Anta': 0}, 2023: {'Centro': 2, 'Norte-Orán': 0, 'Norte-Tartagal': 0, 'Sur-Anta': 0}}},
+        {'Modalidad': 'Sin especificar', 'Distrito': {2020: {'Centro': 47, 'Norte-Orán': 148, 'Norte-Tartagal': 0, 'Sur-Metán': 12}, 2021: {'Centro': 385, 'Norte-Orán': 14, 'Norte-Tartagal': 0, 'Sur-Metán': 3}, 2022: {'Centro': 163, 'Norte-Orán': 76, 'Norte-Tartagal': 28, 'Sur-Anta': 11}, 2023: {'Norte-Orán': 45, 'Norte-Tartagal': 44, 'Sur-Anta': 1, 'Sur-Metán': 0}}}
+
+        ];
+
+        function getChartData3(year, distrito) {
+            return rawData3.map(item => ({
+                Tipo: item.Modalidad,
+                Cantidad: item.Distrito[year][distrito]
+            }));
+        }
+
+        Bagc = []
+        Borc = []
+
+        function changeDistritos3() {
+            const year3 = document.getElementById('Year3').value;
+            const distrito3 = document.getElementById('Distrito3').value;
+
+            const newData3 = getChartData3(year3, distrito3);
+
+            myChart3.data.labels = newData3.map(item => item.Tipo);
+            myChart3.data.datasets[0].data = newData3.map(item => item.Cantidad);
+
+            const values3 = newData3.map(item => item.Cantidad);
+
+            const max3 = Math.max(...values3);
+            const newBagc3 = values3.map(value => value === max3 ? 'rgba(231,165,44,0.7)' : 'rgb(82,76,66,0.7)');
+            const newBorc3 = values3.map(value => value === max3 ? 'rgba(231,165,44,0.9)' : 'rgb(82,76,66,0.9)');
+            const newBagc_hover3 = values3.map(value => value === max3 ? 'rgba(231,165,44,0.8)' : 'rgb(82,76,66,0.8)');
+            const newBorc_hover3 = values3.map(value => value === max3 ? 'rgba(231,165,44,1)' : 'rgb(82,76,66,1)');
+
+            myChart3.data.labels = newData3.map(item => item.Tipo);
+            myChart3.data.datasets[0].data = values3;
+            myChart3.data.datasets[0].backgroundColor = newBagc3;
+            myChart3.data.datasets[0].hoverBackgroundColor = newBagc_hover3;
+            myChart3.data.datasets[0].borderColor = newBorc3;
+            myChart3.data.datasets[0].hoverBorderColor = newBorc_hover3;
+            myChart3.data.datasets[0].borderWidth = 1;
+
+            myChart3.update();
+        }
+
+        const initialData3 = getChartData3(2022, 'Centro');
+
+        const data3 = {
+            labels: initialData3.map(item => item.Tipo),
+            datasets: [{
+                label: 'Cantidad',
+                data: initialData3.map(item => item.Cantidad)
+            }]
+        };
+
+        const config3 = {
+            type: 'bar',
+            data: data3,
+            plugins: [ChartDataLabels],
+            options: {
+                animation: {
+                    duration: 200
+                },
+                plugins: {
+                    datalabels: {
+                        font: {
+                            size: 10
+                        },
+                        color: 'rgb(184, 184, 184)',
+                        display: function(context) {
+                            const year3 = document.getElementById('Year3').value;
+                            const distrito3 = document.getElementById('Distrito3').value;
+                            var values3 = getChartData3(year3, distrito3).map(item => item.Cantidad);
+                            var max3 = Math.max(...values3);
+                            var values3_map = values3.map(value => value < (max3*0.3) && value != 0 ? true : false)
+                            return values3_map
+                        },
+                        clamp: true,
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 0
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: (context) => {
+                                return context[0].label.replaceAll(",","");
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Cantidad'
+                        }
+                    },
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Tipo'
+                        }
+                    }
+                }
+            }
+        };
+
+        const myChart3 = new Chart(ctx3, config3);
+
+        changeDistritos3();
+    </script>
+</div>

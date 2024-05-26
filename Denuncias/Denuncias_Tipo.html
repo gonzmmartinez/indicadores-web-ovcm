@@ -1,0 +1,204 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .select-container {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            align-items: flex-start; /* Asegura que los textos y selects estén alineados */
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .select-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centra el texto y el select dentro del contenedor */
+        }
+        p { 
+            padding:0px; 
+            margin:0px; 
+        }
+    </style>
+</head>
+
+<div style="text-align:center; max-width: 750px; display: block; margin-left: auto; margin-right: auto;">
+    <!-- Fuente Poppins -->
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    
+    <!-- Paquete Chart.js -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    
+    <!-- Titulo del gráfico -->
+    <div style="font-family: Poppins; text-align: left;">
+        <p>
+            <span style="font-size:20px">Denuncias ingresadas</span>
+            <br>
+            <span style="font-size:15px"><i>Por tipo de violencia, distrito, y año</i></span>
+        </p>
+    </div>
+
+    <!-- Canvas para el chart -->
+    <canvas id="myChart2"></canvas>
+
+    <!-- Titulo del gráfico -->
+    <div style="font-family: Poppins; text-align: right; font-size: 12px; color: gray">
+        <p>
+            <strong>NOTA</strong>: La fuente no registra de forma binaria el género de las personas.
+            <br>
+            <strong>FUENTE</strong>: Oficina de Violencia Familiar y de Género.
+        </p>
+    </div>
+
+    <!-- Listas desplegables -->
+    <div class="select-container" style="font-family: Poppins; font-size: 12px;">
+        <div class="select-group">
+            <div >
+                Distrito:
+            </div>
+            <select id="Distrito2" onchange="changeDistritos2()">
+                <option value="Centro">Centro</option>
+                <option value="Norte-Orán">Norte-Orán</option>
+                <option value="Norte-Tartagal">Norte-Tartagal</option>
+                <option value="Sur-Anta">Sur-Anta</option>
+                <option value="Sur-Metán">Sur-Metán</option>
+            </select>
+        </div>
+        <div class="select-group">
+            <div>
+                Año:
+            </div>
+            <select id="Year2" onchange="changeDistritos2()">
+                <option value="2022">2022</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script>
+        // Establecer fuente Poppins
+        Chart.defaults.font.family = "Poppins";
+        Chart.register(ChartDataLabels);
+
+        // Constante ctx
+        const ctx2 = document.getElementById('myChart2').getContext('2d');
+
+        // Datos
+        const rawData2 = [
+            {'Tipo': ['Economica/','Patrimonial'], 'Distritos': {2022: {'Centro':1154,'Norte-Orán':107,'Norte-Tartagal':43,'Sur-Anta':5,'Sur-Metán':96}}},
+            {'Tipo': 'Fisica', 'Distritos': {2022: {'Centro':6131,'Norte-Orán':1594,'Norte-Tartagal':1353,'Sur-Anta':341,'Sur-Metán':666}}},
+            {'Tipo': 'Otros', 'Distritos': {2022: {'Centro':0,'Norte-Orán':5,'Norte-Tartagal':0,'Sur-Anta':0,'Sur-Metán':0}}},
+            {'Tipo': 'Psicologica', 'Distritos': {2022: {'Centro':14316,'Norte-Orán':2740,'Norte-Tartagal':3733,'Sur-Anta':621,'Sur-Metán':1600}}},
+            {'Tipo': 'Sexual', 'Distritos': {2022: {'Centro':385,'Norte-Orán':208,'Norte-Tartagal':126,'Sur-Anta':26,'Sur-Metán':70}}},
+            {'Tipo': 'Simbolica', 'Distritos': {2022: {'Centro':1278,'Norte-Orán':29,'Norte-Tartagal':18,'Sur-Anta':5,'Sur-Metán':67}}}
+        ];
+
+        function getChartData2(year, distrito) {
+            return rawData2.map(item => ({
+                Tipo: item.Tipo,
+                Cantidad: item.Distritos[year][distrito]
+            }));
+        }
+
+        Bagc = []
+        Borc = []
+
+        function changeDistritos2() {
+            const year2 = document.getElementById('Year2').value;
+            const distrito2 = document.getElementById('Distrito2').value;
+
+            const newData2 = getChartData2(year2, distrito2);
+
+            myChart2.data.labels = newData2.map(item => item.Tipo);
+            myChart2.data.datasets[0].data = newData2.map(item => item.Cantidad);
+
+            const values2 = newData2.map(item => item.Cantidad);
+
+            const max2 = Math.max(...values2);
+            const newBagc2 = values2.map(value => value === max2 ? 'rgba(231,165,44,0.7)' : 'rgb(82,76,66,0.7)');
+            const newBorc2 = values2.map(value => value === max2 ? 'rgba(231,165,44,0.9)' : 'rgb(82,76,66,0.9)');
+            const newBagc_hover2 = values2.map(value => value === max2 ? 'rgba(231,165,44,0.8)' : 'rgb(82,76,66,0.8)');
+            const newBorc_hover2 = values2.map(value => value === max2 ? 'rgba(231,165,44,1)' : 'rgb(82,76,66,1)');
+
+            myChart2.data.labels = newData2.map(item => item.Tipo);
+            myChart2.data.datasets[0].data = values2;
+            myChart2.data.datasets[0].backgroundColor = newBagc2;
+            myChart2.data.datasets[0].hoverBackgroundColor = newBagc_hover2;
+            myChart2.data.datasets[0].borderColor = newBorc2;
+            myChart2.data.datasets[0].hoverBorderColor = newBorc_hover2;
+            myChart2.data.datasets[0].borderWidth = 1;
+            myChart2.update();
+        }
+
+        const initialData2 = getChartData2(2022, 'Centro');
+
+        const data2 = {
+            labels: initialData2.map(item => item.Tipo),
+            datasets: [{
+                label: 'Cantidad',
+                data: initialData2.map(item => item.Cantidad)
+            }]
+        };
+
+        const config2 = {
+            type: 'bar',
+            data: data2,
+            plugins: [ChartDataLabels],
+            options: {
+                animation: {
+                    duration: 200
+                },
+                plugins: {
+                    datalabels: {
+                        font: {
+                            size: 10
+                        },
+                        color: 'rgb(184, 184, 184)',
+                        display: function(context) {
+                            const year2 = document.getElementById('Year2').value;
+                            const distrito2 = document.getElementById('Distrito2').value;
+                            var values2 = getChartData2(year2, distrito2).map(item => item.Cantidad);
+                            var max2 = Math.max(...values2);
+                            var values2_map = values2.map(value => value < (max2*0.3) && value != 0 ? true : false)
+                            return values2_map
+                        },
+                        clamp: true,
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 0
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: (context) => {
+                                return context[0].label.replaceAll(",","");
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Cantidad'
+                        }
+                    },
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Tipo'
+                        }
+                    }
+                }
+            }
+        };
+
+        const myChart2 = new Chart(ctx2, config2);
+
+        changeDistritos2();
+    </script>
+</div>
