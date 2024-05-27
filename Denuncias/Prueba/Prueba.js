@@ -78,6 +78,9 @@ var options = {
                 return "$ " + val + " thousands"
             }
         }
+    },
+    animations: {
+        speed: 200
     }
     };
 
