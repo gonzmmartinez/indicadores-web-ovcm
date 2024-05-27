@@ -44,7 +44,10 @@ var options = {
     data: data1
     }],
     chart: {
-        type: 'bar'
+        type: 'bar',
+        animations: {
+            speed: 200
+        }
     },
     plotOptions: {
         bar: {
@@ -78,9 +81,6 @@ var options = {
                 return "$ " + val + " thousands"
             }
         }
-    },
-    animations: {
-        speed: 200
     }
     };
 
