@@ -21,7 +21,7 @@
     </style>
 </head>
 
-<div style="text-align:center; max-width: 750px; display: block; margin-left: auto; margin-right: auto;">
+<div style="text-align:center; max-width: 1000px; display: block; margin-left: auto; margin-right: auto;">
     <!-- Fuente Poppins -->
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     
@@ -175,7 +175,7 @@
                             const distrito = document.getElementById('Distrito').value;
                             var values = getChartData(year, lugar, distrito).map(item => item.Cantidad);
                             var max = Math.max(...values);
-                            var values_map = values.map(value => value < (max*0.3) && value != 0 ? true : false)
+                            var values_map = values.map(value => !(!(value <= (max*0.3)) || !(value != 0)) ? true : false)
                             return values_map
                         },
                         clamp: true,

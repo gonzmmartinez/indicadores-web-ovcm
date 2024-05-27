@@ -1,0 +1,248 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .select-container {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            align-items: flex-start; /* Asegura que los textos y selects estén alineados */
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .select-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centra el texto y el select dentro del contenedor */
+        }
+        p { 
+            padding:0px; 
+            margin:0px; 
+        }
+    </style>
+</head>
+
+<div style="text-align:center; max-width: 1000px; display: block; margin-left: auto; margin-right: auto;">
+    <!-- Fuente Poppins -->
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    
+    <!-- Paquete Chart.js -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    
+    <!-- Titulo del gráfico -->
+    <div style="font-family: Poppins; text-align: left;">
+        <p>
+            <span style="font-size:20px">Edades de las personas que denuncian</span>
+            <br>
+            <span style="font-size:15px"><i>Por distrito, y año</i></span>
+        </p>
+    </div>
+
+    <!-- Canvas para el chart -->
+    <canvas id="myChart4"></canvas>
+
+    <!-- Titulo del gráfico -->
+    <div style="font-family: Poppins; text-align: right; font-size: 12px; color: gray">
+        <p>
+            <strong>NOTA</strong>: La fuente no registra de forma binaria el género de las personas.
+            <br>
+            <strong>FUENTE</strong>: Oficina de Violencia Familiar y de Género.
+        </p>
+    </div>
+
+    <!-- Listas desplegables -->
+    <div class="select-container" style="font-family: Poppins; font-size: 12px;">
+        <div class="select-group">
+            <div >
+                Distrito:
+            </div>
+            <select id="Distrito4" onchange="changeDistritos4()">
+                <option value="Centro">Centro</option>
+                <option value="Norte-Orán">Norte-Orán</option>
+                <option value="Norte-Tartagal">Norte-Tartagal</option>
+                <option value="Sur-Anta">Sur-Anta</option>
+                <option value="Sur-Metán">Sur-Metán</option>
+            </select>
+        </div>
+        <div class="select-group">
+            <div>
+                Año:
+            </div>
+            <select id="Year4" onchange="changeDistritos4()">
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script>
+        // Establecer fuente Poppins
+        Chart.defaults.font.family = "Poppins";
+        Chart.register(ChartDataLabels);
+
+        // Constante ctx
+        const ctx4 = document.getElementById('myChart4').getContext('2d');
+
+        // Datos
+        const rawData4_F = [
+            {'Rango_etario': '0-5 años', 'Distrito': {2020: {'Centro': -114, 'Norte-Orán': -49, 'Norte-Tartagal': -70, 'Sur-Metán': -45}, 2021: {'Centro': -513, 'Norte-Orán': -51, 'Norte-Tartagal': -99, 'Sur-Anta': -7, 'Sur-Metán': -41}, 2022: {'Centro': -503, 'Norte-Orán': -53, 'Norte-Tartagal': -111, 'Sur-Anta': -11, 'Sur-Metán': -39}, 2023: {'Centro': -260, 'Norte-Orán': -32, 'Norte-Tartagal': -29, 'Sur-Anta': -11, 'Sur-Metán': -14}}},
+            {'Rango_etario': '6-10 años', 'Distrito': {2020: {'Centro': -131, 'Norte-Orán': -57, 'Norte-Tartagal': -59, 'Sur-Metán': -38}, 2021: {'Centro': -637, 'Norte-Orán': -79, 'Norte-Tartagal': -88, 'Sur-Anta': -5, 'Sur-Metán': -70}, 2022: {'Centro': -760, 'Norte-Orán': -83, 'Norte-Tartagal': -118, 'Sur-Anta': -19, 'Sur-Metán': -64}, 2023: {'Centro': -349, 'Norte-Orán': -21, 'Norte-Tartagal': -40, 'Sur-Anta': -15, 'Sur-Metán': -21}}},
+            {'Rango_etario': '11-14 años', 'Distrito': {2020: {'Centro': -117, 'Norte-Orán': -54, 'Norte-Tartagal': -59, 'Sur-Metán': -48}, 2021: {'Centro': -539, 'Norte-Orán': -66, 'Norte-Tartagal': -112, 'Sur-Anta': -5, 'Sur-Metán': -54}, 2022: {'Centro': -615, 'Norte-Orán': -96, 'Norte-Tartagal': -147, 'Sur-Anta': -23, 'Sur-Metán': -70}, 2023: {'Centro': -310, 'Norte-Orán': -38, 'Norte-Tartagal': -53, 'Sur-Anta': -13, 'Sur-Metán': -26}}},
+            {'Rango_etario': '15-17 años', 'Distrito': {2020: {'Centro': -1377, 'Norte-Orán': -85, 'Norte-Tartagal': -119, 'Sur-Metán': -70}, 2021: {'Centro': -581, 'Norte-Orán': -105, 'Norte-Tartagal': -132, 'Sur-Anta': -12, 'Sur-Metán': -57}, 2022: {'Centro': -489, 'Norte-Orán': -127, 'Norte-Tartagal': -148, 'Sur-Anta': -17, 'Sur-Metán': -76}, 2023: {'Centro': -236, 'Norte-Orán': -52, 'Norte-Tartagal': -66, 'Sur-Anta': -13, 'Sur-Metán': -39}}},
+            {'Rango_etario': '18-21 años', 'Distrito': {2020: {'Centro': -1429, 'Norte-Orán': -192, 'Norte-Tartagal': -282, 'Sur-Metán': -158}, 2021: {'Centro': -1566, 'Norte-Orán': -220, 'Norte-Tartagal': -313, 'Sur-Anta': -23, 'Sur-Metán': -150}, 2022: {'Centro': -1269, 'Norte-Orán': -225, 'Norte-Tartagal': -286, 'Sur-Anta': -54, 'Sur-Metán': -143}, 2023: {'Centro': -602, 'Norte-Orán': -129, 'Norte-Tartagal': -138, 'Sur-Anta': -17, 'Sur-Metán': -69}}},
+            {'Rango_etario': '22-29 años', 'Distrito': {2020: {'Centro': -3537, 'Norte-Orán': -527, 'Norte-Tartagal': -610, 'Sur-Metán': -286}, 2021: {'Centro': -4320, 'Norte-Orán': -625, 'Norte-Tartagal': -750, 'Sur-Anta': -33, 'Sur-Metán': -381}, 2022: {'Centro': -3979, 'Norte-Orán': -733, 'Norte-Tartagal': -758, 'Sur-Anta': -117, 'Sur-Metán': -360}, 2023: {'Centro': -2090, 'Norte-Orán': -323, 'Norte-Tartagal': -325, 'Sur-Anta': -53, 'Sur-Metán': -212}}},
+            {'Rango_etario': '30-39 años', 'Distrito': {2020: {'Centro': -3567, 'Norte-Orán': -424, 'Norte-Tartagal': -559, 'Sur-Metán': -247}, 2021: {'Centro': -4402, 'Norte-Orán': -568, 'Norte-Tartagal': -687, 'Sur-Anta': -40, 'Sur-Metán': -326}, 2022: {'Centro': -4062, 'Norte-Orán': -649, 'Norte-Tartagal': -733, 'Sur-Anta': -98, 'Sur-Metán': -329}, 2023: {'Centro': -2256, 'Norte-Orán': -285, 'Norte-Tartagal': -299, 'Sur-Anta': -44, 'Sur-Metán': -155}}},
+            {'Rango_etario': '40-49 años', 'Distrito': {2020: {'Centro': -2386, 'Norte-Orán': -230, 'Norte-Tartagal': -309, 'Sur-Metán': -183}, 2021: {'Centro': -2934, 'Norte-Orán': -268, 'Norte-Tartagal': -453, 'Sur-Anta': -29, 'Sur-Metán': -221}, 2022: {'Centro': -2819, 'Norte-Orán': -378, 'Norte-Tartagal': -533, 'Sur-Anta': -46, 'Sur-Metán': -202}, 2023: {'Centro': -1377, 'Norte-Orán': -183, 'Norte-Tartagal': -190, 'Sur-Anta': -30, 'Sur-Metán': -113}}},
+            {'Rango_etario': '50-59 años', 'Distrito': {2020: {'Centro': -1191, 'Norte-Orán': -94, 'Norte-Tartagal': -143, 'Sur-Metán': -74}, 2021: {'Centro': -1314, 'Norte-Orán': -130, 'Norte-Tartagal': -173, 'Sur-Anta': -18, 'Sur-Metán': -104}, 2022: {'Centro': -1264, 'Norte-Orán': -135, 'Norte-Tartagal': -213, 'Sur-Anta': -19, 'Sur-Metán': -115}, 2023: {'Centro': -675, 'Norte-Orán': -62, 'Norte-Tartagal': -84, 'Sur-Anta': -15, 'Sur-Metán': -44}}},
+            {'Rango_etario': '60-74 años', 'Distrito': {2020: {'Centro': -747, 'Norte-Orán': -60, 'Norte-Tartagal': -83, 'Sur-Metán': -40}, 2021: {'Centro': -1033, 'Norte-Orán': -86, 'Norte-Tartagal': -118, 'Sur-Anta': -8, 'Sur-Metán': -74}, 2022: {'Centro': -936, 'Norte-Orán': -102, 'Norte-Tartagal': -128, 'Sur-Anta': -15, 'Sur-Metán': -58}, 2023: {'Centro': -563, 'Norte-Orán': -57, 'Norte-Tartagal': -56, 'Sur-Anta': -10, 'Sur-Metán': -28}}},
+            {'Rango_etario': 'Más de 74 años', 'Distrito': {2020: {'Centro': -264, 'Norte-Orán': -17, 'Norte-Tartagal': -24, 'Sur-Metán': -21}, 2021: {'Centro': -370, 'Norte-Orán': -22, 'Norte-Tartagal': -32, 'Sur-Anta': -4, 'Sur-Metán': -26}, 2022: {'Centro': -370, 'Norte-Orán': -15, 'Norte-Tartagal': -32, 'Sur-Anta': -14, 'Sur-Metán': -23}, 2023: {'Centro': -210, 'Norte-Orán': -16, 'Norte-Tartagal': -15, 'Sur-Anta': -6, 'Sur-Metán': -21}}},
+            {'Rango_etario': 'Sin especificar', 'Distrito': {2020: {'Centro': -403, 'Norte-Orán': -78, 'Norte-Tartagal': -302, 'Sur-Metán': -102}, 2021: {'Centro': -569, 'Norte-Orán': -87, 'Norte-Tartagal': -158, 'Sur-Anta': -10, 'Sur-Metán': -71}, 2022: {'Centro': -382, 'Norte-Orán': -137, 'Norte-Tartagal': -123, 'Sur-Anta': -20, 'Sur-Metán': -80}, 2023: {'Centro': -190, 'Norte-Orán': -69, 'Norte-Tartagal': -215, 'Sur-Anta': -7, 'Sur-Metán': -46}}}
+        ].reverse();
+        const rawData4_M = [
+            {'Rango_etario': '0-5 años', 'Distrito': {2020: {'Centro': 109, 'Norte-Orán': 27, 'Norte-Tartagal': 77, 'Sur-Metán': 26}, 2021: {'Centro': 516, 'Norte-Orán': 42, 'Norte-Tartagal': 80, 'Sur-Anta': 7, 'Sur-Metán': 47}, 2022: {'Centro': 453, 'Norte-Orán': 47, 'Norte-Tartagal': 92, 'Sur-Anta': 16, 'Sur-Metán': 36}, 2023: {'Centro': 287, 'Norte-Orán': 25, 'Norte-Tartagal': 31, 'Sur-Anta': 10, 'Sur-Metán': 15}}},
+            {'Rango_etario': '6-10 años', 'Distrito': {2020: {'Centro': 102, 'Norte-Orán': 36, 'Norte-Tartagal': 70, 'Sur-Metán': 27}, 2021: {'Centro': 606, 'Norte-Orán': 52, 'Norte-Tartagal': 77, 'Sur-Anta': 11, 'Sur-Metán': 55}, 2022: {'Centro': 621, 'Norte-Orán': 59, 'Norte-Tartagal': 88, 'Sur-Anta': 24, 'Sur-Metán': 40}, 2023: {'Centro': 314, 'Norte-Orán': 18, 'Norte-Tartagal': 23, 'Sur-Anta': 10, 'Sur-Metán': 21}}},
+            {'Rango_etario': '11-14 años', 'Distrito': {2020: {'Centro': 76, 'Norte-Orán': 26, 'Norte-Tartagal': 56, 'Sur-Metán': 23}, 2021: {'Centro': 364, 'Norte-Orán': 30, 'Norte-Tartagal': 49, 'Sur-Anta': 3, 'Sur-Metán': 36}, 2022: {'Centro': 418, 'Norte-Orán': 40, 'Norte-Tartagal': 57, 'Sur-Anta': 11, 'Sur-Metán': 28}, 2023: {'Centro': 249, 'Norte-Orán': 25, 'Norte-Tartagal': 18, 'Sur-Anta': 8, 'Sur-Metán': 11}}},
+            {'Rango_etario': '15-17 años', 'Distrito': {2020: {'Centro': 1050, 'Norte-Orán': 11, 'Norte-Tartagal': 31, 'Sur-Metán': 16}, 2021: {'Centro': 229, 'Norte-Orán': 14, 'Norte-Tartagal': 29, 'Sur-Anta': 3, 'Sur-Metán': 31}, 2022: {'Centro': 200, 'Norte-Orán': 16, 'Norte-Tartagal': 32, 'Sur-Anta': 7, 'Sur-Metán': 27}, 2023: {'Centro': 123, 'Norte-Orán': 17, 'Norte-Tartagal': 12, 'Sur-Anta': 4, 'Sur-Metán': 9}}},
+            {'Rango_etario': '18-21 años', 'Distrito': {2020: {'Centro': 350, 'Norte-Orán': 15, 'Norte-Tartagal': 29, 'Sur-Metán': 12}, 2021: {'Centro': 351, 'Norte-Orán': 19, 'Norte-Tartagal': 28, 'Sur-Anta': 3, 'Sur-Metán': 13}, 2022: {'Centro': 223, 'Norte-Orán': 18, 'Norte-Tartagal': 28, 'Sur-Anta': 8, 'Sur-Metán': 26}, 2023: {'Centro': 120, 'Norte-Orán': 8, 'Norte-Tartagal': 10, 'Sur-Anta': 4, 'Sur-Metán': 11}}},
+            {'Rango_etario': '22-29 años', 'Distrito': {2020: {'Centro': 1057, 'Norte-Orán': 56, 'Norte-Tartagal': 65, 'Sur-Metán': 41}, 2021: {'Centro': 1226, 'Norte-Orán': 64, 'Norte-Tartagal': 101, 'Sur-Anta': 9, 'Sur-Metán': 51}, 2022: {'Centro': 1025, 'Norte-Orán': 73, 'Norte-Tartagal': 92, 'Sur-Anta': 84, 'Sur-Metán': 49}, 2023: {'Centro': 468, 'Norte-Orán': 32, 'Norte-Tartagal': 49, 'Sur-Anta': 28, 'Sur-Metán': 32}}},
+            {'Rango_etario': '30-39 años', 'Distrito': {2020: {'Centro': 1311, 'Norte-Orán': 80, 'Norte-Tartagal': 83, 'Sur-Metán': 45}, 2021: {'Centro': 1783, 'Norte-Orán': 92, 'Norte-Tartagal': 126, 'Sur-Anta': 9, 'Sur-Metán': 74}, 2022: {'Centro': 1389, 'Norte-Orán': 104, 'Norte-Tartagal': 132, 'Sur-Anta': 96, 'Sur-Metán': 66}, 2023: {'Centro': 651, 'Norte-Orán': 51, 'Norte-Tartagal': 52, 'Sur-Anta': 26, 'Sur-Metán': 29}}},
+            {'Rango_etario': '40-49 años', 'Distrito': {2020: {'Centro': 859, 'Norte-Orán': 72, 'Norte-Tartagal': 63, 'Sur-Metán': 39}, 2021: {'Centro': 1175, 'Norte-Orán': 84, 'Norte-Tartagal': 110, 'Sur-Anta': 10, 'Sur-Metán': 42}, 2022: {'Centro': 999, 'Norte-Orán': 98, 'Norte-Tartagal': 124, 'Sur-Anta': 63, 'Sur-Metán': 46}, 2023: {'Centro': 478, 'Norte-Orán': 36, 'Norte-Tartagal': 41, 'Sur-Anta': 30, 'Sur-Metán': 21}}},
+            {'Rango_etario': '50-59 años', 'Distrito': {2020: {'Centro': 517, 'Norte-Orán': 55, 'Norte-Tartagal': 46, 'Sur-Metán': 28}, 2021: {'Centro': 652, 'Norte-Orán': 32, 'Norte-Tartagal': 89, 'Sur-Anta': 7, 'Sur-Metán': 22}, 2022: {'Centro': 530, 'Norte-Orán': 38, 'Norte-Tartagal': 80, 'Sur-Anta': 17, 'Sur-Metán': 37}, 2023: {'Centro': 222, 'Norte-Orán': 25, 'Norte-Tartagal': 33, 'Sur-Anta': 7, 'Sur-Metán': 8}}},
+            {'Rango_etario': '60-74 años', 'Distrito': {2020: {'Centro': 407, 'Norte-Orán': 31, 'Norte-Tartagal': 37, 'Sur-Metán': 15}, 2021: {'Centro': 579, 'Norte-Orán': 31, 'Norte-Tartagal': 44, 'Sur-Anta': 3, 'Sur-Metán': 29}, 2022: {'Centro': 451, 'Norte-Orán': 48, 'Norte-Tartagal': 64, 'Sur-Anta': 21, 'Sur-Metán': 32}, 2023: {'Centro': 252, 'Norte-Orán': 27, 'Norte-Tartagal': 31, 'Sur-Anta': 10, 'Sur-Metán': 17}}},
+            {'Rango_etario': 'Más de 74 años', 'Distrito': {2020: {'Centro': 152, 'Norte-Orán': 6, 'Norte-Tartagal': 3, 'Sur-Metán': 8}, 2021: {'Centro': 176, 'Norte-Orán': 14, 'Norte-Tartagal': 14, 'Sur-Anta': 2, 'Sur-Metán': 15}, 2022: {'Centro': 186, 'Norte-Orán': 6, 'Norte-Tartagal': 12, 'Sur-Anta': 6, 'Sur-Metán': 14}, 2023: {'Centro': 91, 'Norte-Orán': 5, 'Norte-Tartagal': 6, 'Sur-Anta': 3, 'Sur-Metán': 9}}},
+            {'Rango_etario': 'Sin especificar', 'Distrito': {2020: {'Centro': 132, 'Norte-Orán': 25, 'Norte-Tartagal': 84, 'Sur-Metán': 32}, 2021: {'Centro': 195, 'Norte-Orán': 32, 'Norte-Tartagal': 39, 'Sur-Anta': 3, 'Sur-Metán': 41}, 2022: {'Centro': 131, 'Norte-Orán': 51, 'Norte-Tartagal': 43, 'Sur-Anta': 7, 'Sur-Metán': 40}, 2023: {'Centro': 86, 'Norte-Orán': 22, 'Norte-Tartagal': 65, 'Sur-Anta': 5, 'Sur-Metán': 33}}}
+        ].reverse();
+
+        function getChartData4(year, distrito) {
+            return {
+                'F': rawData4_F.map(item => ({
+                    Tipo: item.Rango_etario,
+                    Cantidad: item.Distrito[year] ? item.Distrito[year][distrito] || 0 : 0
+                })),
+                'M': rawData4_M.map(item => ({
+                    Tipo: item.Rango_etario,
+                    Cantidad: item.Distrito[year] ? item.Distrito[year][distrito] || 0 : 0
+                }))
+            }
+        }
+
+        Bagc = []
+        Borc = []
+
+        function changeDistritos4() {
+            const year4 = document.getElementById('Year4').value;
+            const distrito4 = document.getElementById('Distrito4').value;
+
+            const newData4 = getChartData4(year4, distrito4);
+
+            myChart4.data.datasets[0].data = newData4.F.map(item => item.Cantidad);
+            myChart4.data.datasets[1].data = newData4.M.map(item => item.Cantidad);
+
+            myChart4.update();
+        }
+
+        const initialData4 = getChartData4(2022, 'Centro');
+
+        const data4 = {
+            labels: initialData4.F.map(item => item.Tipo),
+            datasets: [{
+                label: 'Mujeres',
+                data: initialData4.F.map(item => item.Cantidad),
+                stack: 'Stack 0',
+                backgroundColor: 'rgba(231,165,44, 0.7)',
+                hoverBackgroundColor: 'rgba(231,165,44, 0.9)'
+                },{
+                label: 'Hombres',
+                data: initialData4.M.map(item => item.Cantidad),
+                stack: 'Stack 0',
+                backgroundColor: 'rgba(103, 63, 105, 0.7)',
+                hoverBackgroundColor: 'rgba(103, 63, 105, 0.9)'
+                }
+            ]
+        };
+
+        const config4 = {
+            type: 'bar',
+            data: data4,
+            plugins: [ChartDataLabels],
+            options: {
+                indexAxis: 'y',
+                animation: {
+                    duration: 200
+                },
+                plugins: {
+                    datalabels: {
+                        formatter: function(value, context) {
+                                return Math.abs(value);
+                            },
+                        font: {
+                            size: 10
+                        },
+                        color: 'rgb(184, 184, 184)',
+                        clamp: true,
+                        anchor: function(context) {
+                            var index = context.datasetIndex;
+                            return index == 0 ? 'start' : 'end';
+                        },
+                        align: function(context) {
+                            var index = context.datasetIndex;
+                            return index == 0 ? 'left' : 'right';
+                        },
+                        display: function(context) {
+                            const year4 = document.getElementById('Year4').value;
+                            const distrito4 = document.getElementById('Distrito4').value;
+
+                            const newData4 = getChartData4(year4, distrito4);
+                            
+                            const values4_arr = newData4.F.map(item => item.Cantidad).concat(newData4.M.map(item => item.Cantidad));
+                            
+                            var max = Math.max(...values4_arr.map(item => Math.abs(item)));
+
+                            return context.dataset.data.map(value => value > 0.1*max || value < -0.1*max ? false : true);
+                        }
+                    },
+                    legend: {
+                        display: true
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => {
+                                return Math.abs(context.raw)
+                            },
+                            title: (context) => {
+                                return context[0].label.replaceAll(",","");
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Rango etario'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            callback: function(value,index,ticks) {
+                                return Math.abs(value)
+                            }
+                        },
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Cantidad'
+                        }
+                    }
+                }
+            }};
+
+        const myChart4 = new Chart(ctx4, config4);
+
+        changeDistritos4();
+    </script>
+</div>
