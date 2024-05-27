@@ -46,7 +46,7 @@ var options = {
     chart: {
         type: 'bar',
         animations: {
-            speed: 200
+            speed: 250
         }
     },
     plotOptions: {
