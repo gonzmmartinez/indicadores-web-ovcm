@@ -1,5 +1,3 @@
-const data1 = [44, 55, 57, 56, 61, 58, 63, 60, 66];
-
 const rawData1 = [
     {'Tipo': ['Economica/','Patrimonial'], 'Distrito': {2022: {'Centro':1154,'Norte-Orán':107,'Norte-Tartagal':43,'Sur-Anta':5,'Sur-Metán':96}}},
     {'Tipo': 'Fisica', 'Distrito': {2022: {'Centro':6131,'Norte-Orán':1594,'Norte-Tartagal':1353,'Sur-Anta':341,'Sur-Metán':666}}},
@@ -46,7 +44,7 @@ var options = {
     chart: {
         type: 'bar',
         animations: {
-            speed: 200
+            speed: 250
         }
     },
     plotOptions: {
