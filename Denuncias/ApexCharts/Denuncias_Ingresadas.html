@@ -71,7 +71,7 @@
                 <div >
                     Distrito:
                 </div>
-                <select id="Distrito1" onchange="changeDistritos1()">
+                <select id="Distrito2" onchange="changeDistritos2()">
                     <option value="Centro">Centro</option>
                     <option value="Norte-Orán">Norte-Orán</option>
                     <option value="Norte-Tartagal">Norte-Tartagal</option>
@@ -83,17 +83,25 @@
                 <div>
                     Año:
                 </div>
-                <select id="Year1" onchange="changeDistritos1()">
+                <select id="Year2" onchange="changeDistritos2()">
                     <option value="2022">2022</option>
                 </select>
             </div>
         </div>
     </div>
-
+    
+    <!-- ApexCharts.js -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     
+    <!-- Gráfico -->
     <script>
-        const rawData1 = [
+         const data_new = fetch('https://bioinfobot.github.io/data/2017-05.json')
+            .then(res => res.json())
+            .then(json => {
+                //json vaiable contains object with data
+        })
+
+        const rawData2 = [
             {'Tipo': ['Economica/','Patrimonial'], 'Distrito': {2022: {'Centro':1154,'Norte-Orán':107,'Norte-Tartagal':43,'Sur-Anta':5,'Sur-Metán':96}}},
             {'Tipo': 'Fisica', 'Distrito': {2022: {'Centro':6131,'Norte-Orán':1594,'Norte-Tartagal':1353,'Sur-Anta':341,'Sur-Metán':666}}},
             {'Tipo': 'Otros', 'Distrito': {2022: {'Centro':0,'Norte-Orán':5,'Norte-Tartagal':0,'Sur-Anta':0,'Sur-Metán':0}}},
@@ -102,31 +110,31 @@
             {'Tipo': 'Simbolica', 'Distrito': {2022: {'Centro':1278,'Norte-Orán':29,'Norte-Tartagal':18,'Sur-Anta':5,'Sur-Metán':67}}}
         ];
 
-        function getChartData1(year, distrito) {
-            return rawData1.map(item => ({
+        function getChartData2(year, distrito) {
+            return rawData2.map(item => ({
                 Tipo: item.Tipo,
                 Cantidad: item.Distrito[year][distrito]
             }));
         }
 
-        function changeDistritos1() {
-            const year1 = document.getElementById('Year1').value;
-            const distrito1 = document.getElementById('Distrito1').value;
+        function changeDistritos2() {
+            const year = document.getElementById('Year2').value;
+            const distrito = document.getElementById('Distrito2').value;
 
-            const newData1 = getChartData1(year1, distrito1);
+            const newData = getChartData2(year, distrito);
 
-            this.options.series[0].data = newData1.map(item => item.Cantidad);
-            this.options.xaxis.categories = newData1.map(item => item.Tipo);
+            this.options.series[0].data = newData.map(item => item.Cantidad);
+            this.options.xaxis.categories = newData.map(item => item.Tipo);
 
-            chart1.update();
+            chart2.update();
         }
 
-        const initialData1 = getChartData1(2022, "Centro");
+        const initialData2 = getChartData2(2022, "Centro");
 
         var options = {
             series: [{
             name: 'Cantidad',
-            data: initialData1
+            data: initialData2
             }],
             legend: {
                 show: false
@@ -135,13 +143,14 @@
                 height: 400,
                 type: 'bar',
                 animations: {
-                    speed: 250
+                    enabled: true,
+                    speed: 500
                 }
             },
             plotOptions: {
                 bar: {
                     horizontal: false,
-                    columnWidth: '75%',
+                    columnWidth: '55%',
                     endingShape: 'rounded',
                     distributed: true,
                     dataLabels: {
@@ -152,9 +161,9 @@
             dataLabels: {
                 enabled: true,
                 formatter: function (value) {
-                    const year = document.getElementById('Year1').value;
-                    const distrito = document.getElementById('Distrito1').value;
-                    var values = getChartData1(year, distrito).map(item => item.Cantidad);
+                    const year = document.getElementById('Year2').value;
+                    const distrito = document.getElementById('Distrito2').value;
+                    var values = getChartData2(year, distrito).map(item => item.Cantidad);
                     var max = Math.max(...values);
                     if (value < 0.1*max) {
                         return value
@@ -177,7 +186,7 @@
                 title: {
                     text: 'Tipo de violencia'
                 },
-                categories: initialData1.map(item => item.Tipo),
+                categories: initialData2.map(item => item.Tipo),
             },
             yaxis: {
                 title: {
@@ -195,9 +204,9 @@
                 }
             },
             colors: [function({value, seriesIndex, w}) {
-                const year = document.getElementById('Year1').value;
-                const distrito = document.getElementById('Distrito1').value;
-                var values = getChartData1(year, distrito).map(item => item.Cantidad);
+                const year = document.getElementById('Year2').value;
+                const distrito = document.getElementById('Distrito2').value;
+                var values = getChartData2(year, distrito).map(item => item.Cantidad);
                 var max = Math.max(...values);
                 if (value == max) {
                     return 'rgba(231,165,44,0.7)'
@@ -207,9 +216,9 @@
             }]
             };
 
-            var chart1 = new ApexCharts(document.querySelector("#chart"), options);
-            chart1.render();
-            changeDistritos1();
+            var chart2 = new ApexCharts(document.querySelector("#chart"), options);
+            chart2.render();
+            changeDistritos2();
     </script>
 </body>
 </html>

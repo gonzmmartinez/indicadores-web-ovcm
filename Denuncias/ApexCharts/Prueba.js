@@ -23,6 +23,16 @@ function changeDistritos1() {
     this.options.series[0].data = newData1.map(item => item.Cantidad);
     this.options.xaxis.categories = newData1.map(item => item.Tipo);
 
+    const values2 = newData1.map(item => item.Cantidad);
+
+    const max2 = Math.max(...values2);
+    //const newBagc2 = values2.map(value => value === max2 ? 'rgba(231,165,44,0.7)' : 'rgb(82,76,66,0.7)');
+    //const newBorc2 = values2.map(value => value === max2 ? 'rgba(231,165,44,0.9)' : 'rgb(82,76,66,0.9)');
+    //const newBagc_hover2 = values2.map(value => value === max2 ? 'rgba(231,165,44,0.8)' : 'rgb(82,76,66,0.8)');
+    //const newBorc_hover2 = values2.map(value => value === max2 ? 'rgba(231,165,44,1)' : 'rgb(82,76,66,1)');
+
+    console.log(this.options.series)
+
     chart1.update();
 }
 

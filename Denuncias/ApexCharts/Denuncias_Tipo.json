@@ -1,0 +1,6 @@
+[{'Tipo': ['Economica/','Patrimonial'], 'Distrito': {2022: {'Centro':1154,'Norte-Orán':107,'Norte-Tartagal':43,'Sur-Anta':5,'Sur-Metán':96}}},
+{'Tipo': 'Fisica', 'Distrito': {2022: {'Centro':6131,'Norte-Orán':1594,'Norte-Tartagal':1353,'Sur-Anta':341,'Sur-Metán':666}}},
+{'Tipo': 'Otros', 'Distrito': {2022: {'Centro':0,'Norte-Orán':5,'Norte-Tartagal':0,'Sur-Anta':0,'Sur-Metán':0}}},
+{'Tipo': 'Psicologica', 'Distrito': {2022: {'Centro':14316,'Norte-Orán':2740,'Norte-Tartagal':3733,'Sur-Anta':621,'Sur-Metán':1600}}},
+{'Tipo': 'Sexual', 'Distrito': {2022: {'Centro':385,'Norte-Orán':208,'Norte-Tartagal':126,'Sur-Anta':26,'Sur-Metán':70}}},
+{'Tipo': 'Simbolica', 'Distrito': {2022: {'Centro':1278,'Norte-Orán':29,'Norte-Tartagal':18,'Sur-Anta':5,'Sur-Metán':67}}}]
